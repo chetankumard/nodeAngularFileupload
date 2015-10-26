@@ -1,0 +1,69 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<base href="/">
+	<title></title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width">
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.js"></script>
+	<script src="https://angular-file-upload.appspot.com/js/ng-file-upload.js"></script>
+	<script type="text/javascript">
+		angular.module('ladduzAdminApp', ['ngRoute','ngFileUpload'])
+			.controller('uploadCtrl', function ($scope, $http,Upload) {
+				 $scope.uploadPic = function(file) {
+    file.upload = Upload.upload({
+      url: '/api/photoFile',
+      data: {file: file},
+    });
+
+    file.upload.then(function (response) {
+        file.result = response.data;
+    }, function (response) {
+      if (response.status > 0)
+        $scope.errorMsg = response.status + ': ' + response.data;
+    }, function (evt) {
+      // Math.min is to fix IE which reports 200% sometimes
+      file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+    });
+    }
+					
+	}).service('uploadSvc', ['$http', function ($http) {
+				return {
+		uploadLogo: function (logo) {
+			var formData = new FormData();
+			formData.append("file", logo);
+			return $http.post('/api/photoFile', formData, {
+				headers: { 'Content-Type': undefined },
+				transformRequest: angular.identity
+			});
+		}
+	};
+}]);
+	</script>
+</head>
+
+<body ng-app="ladduzAdminApp">
+	Image upload
+	<div ng-controller="uploadCtrl">
+		<form name="myForm">
+			<fieldset>
+				<legend>Upload on form submit</legend>
+				<input type="file" ngf-select ng-model="picFile" name="file" accept="*"  required>
+				<button ng-click="uploadPic(picFile)">Submit</button>
+			</fieldset>
+			<br>
+		</form>
+	</div>
+
+</body>
+
+</html>
