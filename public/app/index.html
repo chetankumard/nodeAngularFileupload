@@ -17,7 +17,7 @@
 	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.js"></script>
 	<script src="https://angular-file-upload.appspot.com/js/ng-file-upload.js"></script>
 	<script type="text/javascript">
-		angular.module('ladduzAdminApp', ['ngRoute','ngFileUpload'])
+		angular.module('fileUpload', ['ngRoute','ngFileUpload'])
 			.controller('uploadCtrl', function ($scope, $http,Upload) {
 				 $scope.uploadPic = function(file) {
     file.upload = Upload.upload({
@@ -51,7 +51,7 @@
 	</script>
 </head>
 
-<body ng-app="ladduzAdminApp">
+<body ng-app="fileUpload">
 	Image upload
 	<div ng-controller="uploadCtrl">
 		<form name="myForm">
